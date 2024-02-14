@@ -1,0 +1,211 @@
+html file
+--------------------------------------------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pro-2</title>
+        <link rel="stylesheet" href="project2.css"> 
+</head>
+<body>
+  <h1>Rock Papar Scissors </h1> 
+  <div class="choices" >
+    <div class="choice" id="rock">
+        <img src="rock.jpg">
+    </div>
+    <br>
+    <div class="choice" id="papar">
+        <img src="papar.jpg">
+    </div>
+    <br>
+    <div class="choice" id="scisser">
+        <img src="scissors.jpg">
+    </div>
+  </div>
+
+  <div class="score-bord">
+    <div class="score">
+        <p id="user-score">0</p>
+        <p>You</p>
+    </div>
+
+    <div class="score">
+        <p id="computer-score">0</p>
+        <p>Computer</p>
+    </div>
+  </div>
+
+  <img id="result-img" src="papar.jpg" alt="Result Image">
+
+  <div class="msg-container">
+    <p id="msg">Play your move </p>
+  </div>
+
+<script src="project2.js"></script> 
+</body>
+</html>
+----------------------------------------------------------------------------------------------------------------
+css file
+---------------------------------------------------------------------------------------------------------------
+* {
+    margin: 0;
+    padding: 0; 
+    text-align: center; 
+}
+
+h1 {
+      background-color: #081b31; 
+      color: white; 
+      height: 5rem;
+     line-height: 5rem;     
+}
+
+.choice {
+    height: 160px;
+    width: 160px;
+    border-radius:50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.choice:hover {
+    cursor: pointer;
+    background-color: #081b31;
+    
+}
+
+img {
+    height: 150px;
+    width: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.choices {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 5rem;
+}
+
+.score-bord {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    margin-top: 3rem;
+    gap: 5rem;
+}
+
+#user-score, #computer-score {
+    font-size: 5rem;
+    
+}
+
+.msg-container {
+    margin-top: 3rem;
+}
+
+#msg {
+    background-color: #081b31;
+    color: white;
+    font-size: 2rem;
+    display: inline;
+    padding: 1rem;
+    border-radius: 1rem;
+}
+----------------------------------------------------------------------------------------------------------------------
+JS file
+----------------------------------------------------------------------------------------------------------------------
+let userScore = 0;
+let compScore = 0;
+
+const choices = document.querySelectorAll(".choice");
+const msg = document.querySelector("#msg");
+const userScorePara = document.querySelector("#user-score");
+const compScorePara = document.querySelector("#computer-score");
+const resultImg = document.querySelector("#result-img");
+
+const genCompChoice = () => {
+    const options =["rock","papar","scissors"];
+    const randIdx = Math.floor(Math.random() * 3);
+    console.log(randIdx);
+    return options[randIdx];
+};
+
+const drawGame =() => {
+    msg.innerText = "game was draw, play again.";
+    msg.style.backgroundColor ="#081b31";
+};
+
+const showWinner = (userWin) => {
+    if (userWin) {
+        userScore++;
+        userScorePara.innerText =userScore;
+        msg.innerText ="you win!";
+        msg.style.backgroundColor ="green";
+        
+    } else {
+        compScore++;
+        compScorePara.innerText = compScore;
+        msg.innerText ="you lose!";
+        msg.style.backgroundColor ="red";
+       
+    } 
+};
+const playGame = (userChoice) => {
+    console.log("user Choice =", userChoice);
+    //generate computer choice 
+    const compChoice = genCompChoice();
+    console.log("comp choice = ", compChoice);
+
+    // Get the image URL for computer's choice
+    const compImgUrl = compChoice + ".jpg";
+
+    const userImgUrl = userChoice + ".jpg";
+
+    console.log("computer = " + compImgUrl );
+    console.log("user = " +userImgUrl);
+
+    // Set the src attribute of resultImg to display computer's choice
+    resultImg.setAttribute("src", compImgUrl ,userImgUrl);
+
+    if (userChoice === compChoice) { 
+        // draw game
+        drawGame();
+    } else {
+        let userWin = true;
+        if (userChoice === "rock") {
+            //scissors, paper
+           userWin= compChoice ==="papar" ? false : true;
+        } else if (userChoice === "papar") {
+            //  rock, scissors
+            userWin = compChoice === "scissors" ? false : true;
+        } else {
+            //  rock, paper
+            userWin = compChoice === "rock" ? false : true;
+        }
+        showWinner(userWin);
+    }
+};
+
+
+
+choices.forEach((choice)=> {
+    choice.addEventListener("click",() => {
+        const userChoice = choice.getAttribute("id");
+        playGame(userChoice);
+    });
+});
+
+
+
+
+
+
+
+
+
